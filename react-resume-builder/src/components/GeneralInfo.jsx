@@ -5,9 +5,25 @@ function GeneralInfo() {
   const [email, setEmail] = useState("");
   const [tel, setTel] = useState("");
 
+  const [isEditing, setIsEditing] = useState(true);
+
   const handleSubmit = () => {
     console.log(name, email, tel);
   };
+
+  if (!isEditing) {
+    return (
+      <div>
+        <h2>Personal Information</h2>
+
+        <p>{name}</p>
+        <p>{email}</p>
+        <p>{tel}</p>
+
+        <button onClick={() => setIsEditing(true)}>Edit</button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -35,7 +51,14 @@ function GeneralInfo() {
         placeholder="Phone number"
       />
 
-      <button onClick={handleSubmit}>Save</button>
+      <button
+        onClick={() => {
+          handleSubmit();
+          setIsEditing(false);
+        }}
+      >
+        Save
+      </button>
     </div>
   );
 }

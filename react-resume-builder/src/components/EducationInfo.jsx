@@ -7,6 +7,8 @@ function EducationInfo() {
   const [endDate, setEndDate] = useState("");
   const [educations, setEducations] = useState([]);
 
+  const [isEditing, setIsEditing] = useState(true);
+
   const handleAdd = () => {
     setEducations((prev) => [...prev, { school, major, startDate, endDate }]);
 
@@ -15,6 +17,27 @@ function EducationInfo() {
     setStartDate("");
     setEndDate("");
   };
+
+  if (!isEditing) {
+    return (
+      <div>
+        <h2>Education</h2>
+
+        {educations.map((edu, index) => (
+          <div key={index}>
+            <p>
+              {edu.school} — {edu.major}
+            </p>
+            <p>
+              {edu.startDate} / {edu.endDate}
+            </p>
+          </div>
+        ))}
+
+        <button onClick={() => setIsEditing(true)}>Edit</button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -41,7 +64,6 @@ function EducationInfo() {
         name="startDate"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
-        placeholder="Start Date"
       />
 
       <input
@@ -49,22 +71,13 @@ function EducationInfo() {
         name="endDate"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        placeholder="End Date"
       />
 
       <button onClick={handleAdd}>+ Add Education</button>
 
-      {educations.map((edu, index) => (
-        <div key={index}>
-          <p>
-            {edu.school} — {edu.major}
-          </p>
-          <p>
-            {edu.startDate} / {edu.endDate}
-          </p>
-        </div>
-      ))}
+      <button onClick={() => setIsEditing(false)}>Save</button>
     </div>
   );
 }
+
 export default EducationInfo;
