@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function PracticalExperience() {
   const [company, setCompany] = useState("");
@@ -6,9 +6,27 @@ function PracticalExperience() {
   const [responsibilities, setResponsibilities] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [experiences, setExperiences] = useState([]);
+  const [experiences, setExperiences] = useState(() => {
+    const saved = localStorage.getItem("experience");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(() => {
+    const saved = localStorage.getItem("experience");
+    return saved ? false : true;
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem("experience");
+    if (saved) {
+      setExperiences(JSON.parse(saved));
+      setIsEditing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("experience", JSON.stringify(experiences));
+  }, [experiences]);
 
   const handleAdd = () => {
     setExperiences((prev) => [

@@ -1,13 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function EducationInfo() {
   const [school, setSchool] = useState("");
   const [major, setMajor] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [educations, setEducations] = useState([]);
+  const [educations, setEducations] = useState(() => {
+    const saved = localStorage.getItem("educations");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(() => {
+    const saved = localStorage.getItem("educations");
+    return saved ? false : true;
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem("educations");
+    console.log("LOADING:", saved);
+
+    if (saved) {
+      const parsed = JSON.parse(saved);
+
+      setEducations(parsed);
+
+      if (parsed.length > 0) {
+        setIsEditing(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("educations", JSON.stringify(educations));
+    console.log("SAVING educations:", educations);
+  }, [educations]);
 
   const handleAdd = () => {
     setEducations((prev) => [...prev, { school, major, startDate, endDate }]);

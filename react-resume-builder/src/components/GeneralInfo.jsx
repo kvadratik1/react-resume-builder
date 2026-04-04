@@ -1,16 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function GeneralInfo() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [tel, setTel] = useState("");
+  // -----------------------------
+  // ИЗМЕНЕНО: useState теперь инициализируется сразу из localStorage
+  // -----------------------------
+  const [name, setName] = useState(() => {
+    const saved = localStorage.getItem("general");
+    return saved ? JSON.parse(saved).name : "";
+  });
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [email, setEmail] = useState(() => {
+    const saved = localStorage.getItem("general");
+    return saved ? JSON.parse(saved).email : "";
+  });
+
+  const [tel, setTel] = useState(() => {
+    const saved = localStorage.getItem("general");
+    return saved ? JSON.parse(saved).tel : "";
+  });
+
+  const [isEditing, setIsEditing] = useState(() => {
+    const saved = localStorage.getItem("general");
+    return saved ? false : true; // если есть данные — сразу не редактируем
+  });
+
+  // -----------------------------
+  // ИЗМЕНЕНО: useEffect сохраняет изменения в localStorage
+  // -----------------------------
+  useEffect(() => {
+    localStorage.setItem("general", JSON.stringify({ name, email, tel }));
+  }, [name, email, tel]);
 
   const handleSubmit = () => {
     console.log(name, email, tel);
   };
 
+  // -----------------------------
+  // Добавлено: рендер для просмотра данных
+  // -----------------------------
   if (!isEditing) {
     return (
       <div>
@@ -25,27 +52,27 @@ function GeneralInfo() {
     );
   }
 
+  // -----------------------------
+  // Добавлено: форма редактирования
+  // -----------------------------
   return (
     <div>
       <h2>Personal Information</h2>
 
       <input
         type="text"
-        name="name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Full name"
       />
       <input
         type="email"
-        name="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
       />
       <input
         type="tel"
-        name="tel"
         value={tel}
         onChange={(e) => setTel(e.target.value)}
         placeholder="Phone number"
