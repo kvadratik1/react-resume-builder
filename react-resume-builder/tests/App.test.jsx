@@ -9,37 +9,35 @@ beforeEach(() => {
 });
 
 describe("App", () => {
-  // 1
   it("renders main heading", () => {
     render(<App />);
     expect(screen.getByText(/CV Aplication/i)).toBeInTheDocument();
   });
 
-  // 2
   it("renders Personal Information section", () => {
     render(<App />);
     expect(screen.getByText(/Personal Information/i)).toBeInTheDocument();
   });
 
-  // 3
   it("renders Education section", () => {
     render(<App />);
-    expect(screen.getByText(/Education/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Education/i })
+    ).toBeInTheDocument();
   });
 
-  // 4
   it("renders Practical Experience section", () => {
     render(<App />);
-    expect(screen.getByText(/Practical Experience/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Practical Experience/i })
+    ).toBeInTheDocument();
   });
 
-  // 5
   it("renders inputs in edit mode initially", () => {
     render(<App />);
     expect(screen.getByPlaceholderText(/Full name/i)).toBeInTheDocument();
   });
 
-  // 6
   it("can type into name input", () => {
     render(<App />);
     const input = screen.getByPlaceholderText(/Full name/i);
@@ -49,7 +47,6 @@ describe("App", () => {
     expect(input.value).toBe("Alex");
   });
 
-  // 7
   it("can type into email input", () => {
     render(<App />);
     const input = screen.getByPlaceholderText(/Email/i);
@@ -59,24 +56,26 @@ describe("App", () => {
     expect(input.value).toBe("test@mail.com");
   });
 
-  // 8
   it("can save personal info", () => {
     render(<App />);
-    fireEvent.click(screen.getByText(/Save/i));
+
+    const saveBtn = screen.getAllByText("Save")[0];
+    fireEvent.click(saveBtn);
 
     expect(screen.getByText(/Edit/i)).toBeInTheDocument();
   });
 
-  // 9
   it("switches to edit mode after clicking Edit", () => {
     render(<App />);
-    fireEvent.click(screen.getByText(/Save/i));
+
+    const saveBtn = screen.getAllByText("Save")[0];
+    fireEvent.click(saveBtn);
+
     fireEvent.click(screen.getByText(/Edit/i));
 
     expect(screen.getByPlaceholderText(/Full name/i)).toBeInTheDocument();
   });
 
-  // 10
   it("adds education entry", () => {
     render(<App />);
 
@@ -88,12 +87,11 @@ describe("App", () => {
       target: { value: "CS" },
     });
 
-    fireEvent.click(screen.getByText(/\+ Add Education/i));
+    fireEvent.click(screen.getByRole("button", { name: "+ Add Education" }));
 
     expect(screen.getByText(/Harvard/i)).toBeInTheDocument();
   });
 
-  // 11
   it("adds experience entry", () => {
     render(<App />);
 
@@ -105,25 +103,25 @@ describe("App", () => {
       target: { value: "Dev" },
     });
 
-    fireEvent.click(screen.getByText(/\+ Add Experience/i));
+    fireEvent.click(screen.getByRole("button", { name: "+ Add Experience" }));
 
     expect(screen.getByText(/Google/i)).toBeInTheDocument();
   });
 
-  // 12
   it("saves data to localStorage", () => {
     render(<App />);
+
     fireEvent.change(screen.getByPlaceholderText(/Full name/i), {
       target: { value: "Alex" },
     });
 
-    fireEvent.click(screen.getByText(/Save/i));
+    const saveBtn = screen.getAllByText("Save")[0];
+    fireEvent.click(saveBtn);
 
     const data = JSON.parse(localStorage.getItem("general"));
     expect(data.name).toBe("Alex");
   });
 
-  // 13
   it("loads data from localStorage", () => {
     localStorage.setItem(
       "general",
@@ -134,13 +132,11 @@ describe("App", () => {
     expect(screen.getByText(/John/i)).toBeInTheDocument();
   });
 
-  // 14
   it("download button exists", () => {
     render(<App />);
     expect(screen.getByText(/Download PDF/i)).toBeInTheDocument();
   });
 
-  // 15
   it("resume container exists", () => {
     render(<App />);
     const resume = document.getElementById("resume");
