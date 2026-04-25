@@ -6,6 +6,11 @@ import html2pdf from "html2pdf.js";
 
 function App() {
   const downloadPDF = () => {
+    const buttons = document.querySelectorAll("button");
+
+    // скрываем
+    buttons.forEach((btn) => (btn.style.display = "none"));
+
     const element = document.getElementById("resume");
 
     const opt = {
@@ -16,7 +21,14 @@ function App() {
       jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
     };
 
-    html2pdf().set(opt).from(element).save();
+    html2pdf()
+      .set(opt)
+      .from(element)
+      .save()
+      .then(() => {
+        // возвращаем обратно
+        buttons.forEach((btn) => (btn.style.display = "block"));
+      });
   };
   return (
     <div>
